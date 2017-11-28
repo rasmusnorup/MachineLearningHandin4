@@ -42,9 +42,10 @@ def lloyds_algorithm(X, k, T):
             centroids[j] = 1/((clustering == j).sum) *np.sum( X[clustering == j], 0) 
         # END CODE
 
-
         # Update clustering
         # YOUR CODE HERE
+        for j in range(n):
+            clustering[j] = np.argmin(np.square(np.linalg.norm(X[j]-centroids[q])) for q in range(k))
         # END CODEp
 
         # Compute and print cost
