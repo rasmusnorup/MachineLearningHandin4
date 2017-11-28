@@ -1,6 +1,6 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
+import matplotlib.pyplot as plt
 
 # Load the Iris data set
 import sklearn.datasets
@@ -27,7 +27,7 @@ def lloyds_algorithm(X, k, T):
     # Initialize clusters random.
     clustering = np.random.randint(0, k, (n, ))
     centroids  = np.zeros((k, d))
-    print(clustering)
+
     # Used to stop if cost isn't improving (decreasing)
     cost = 0
     oldcost = 0
@@ -39,16 +39,13 @@ def lloyds_algorithm(X, k, T):
         # Update centroid
         # YOUR CODE HERE
         for j in range(k):
-            for m in range(n):
-                
-            centroids[j] = (1/)
-
+            centroids[j] = 1/((clustering == j).sum) *np.sum( X[clustering == j], 0) 
         # END CODE
 
 
         # Update clustering
         # YOUR CODE HERE
-        # END CODE
+        # END CODEp
 
         # Compute and print cost
         cost = 0
