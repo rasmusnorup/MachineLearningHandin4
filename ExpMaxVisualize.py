@@ -1,7 +1,8 @@
-import numpy as np
-from scipy.stats import multivariate_normal
 import matplotlib.pyplot as plt
-
+import numpy as np
+import time
+from mpl_toolkits.mplot3d import Axes3D
+from scipy.stats import multivariate_normal
 
 
 def compute_probs_cx(points, means, covs, probs_c):
@@ -40,8 +41,7 @@ def compute_probs_cx(points, means, covs, probs_c):
 
     return probs_cx, probs_x
 
-
-def em_algorithm(X, k, T, epsilon=0.001, means=None):
+def em_algorithm_visualize(X, k, T, epsilon=0.001, means=None, detail=20):
     """ Clusters the data X into k clusters using the Expectation Maximization algorithm.
 
         Parameters
@@ -63,18 +63,31 @@ def em_algorithm(X, k, T, epsilon=0.001, means=None):
     """
     n, d = X.shape
 
-    # Initialize and validate mean
-    if means is None:
-        means = np.random.rand(k, d)
+    # Visualization stuff.
+    fig, (ax, _, _, _, _) = plt.subplots(5, 1, figsize=(10, 16))
+    ax.axis('off')
+    colors = ["r", "g", "b"]
+    ax3d = fig.add_subplot(2, 1, 2, projection='3d')
+    ax3d1 = fig.add_subplot(3, 1, 2, projection='3d')
+    ax3d2 = fig.add_subplot(4, 1, 2, projection='3d')
+    ax3d3 = fig.add_subplot(5, 1, 2, projection='3d')
+    ax3d.set_axis_off()
+    ax3d1.set_axis_off()
+    ax3d2.set_axis_off()
+    ax3d3.set_axis_off()
 
-    # Initialize cov, prior
+    # Initialize and validate mean
+    if means is None: means = np.random.rand(k, d)
+
+    # Initialize
     probs_x = np.zeros(n)
     probs_cx = np.zeros((k, n))
-    probs_c = np.zeros(k) + np.random.rand(k)
-
+    probs_c = np.zeros(k)
     covs = np.zeros((k, d, d))
     for i in range(k): covs[i] = np.identity(d)
     probs_c = np.ones(k) / k
+
+    # END CODE
 
     # Column names
     print("Iterations\tLLH")
@@ -83,10 +96,11 @@ def em_algorithm(X, k, T, epsilon=0.001, means=None):
     old_means = np.zeros_like(means)
     iterations = 0
     while not (close) and iterations < T:
-        old_means[:] = means
+        old_means[:] = means  # This allows us to actually copy the array mean
 
         # Expectation step
         probs_cx, probs_x = compute_probs_cx(X, means, covs, probs_c)
+        if probs_cx is None: return em_algorithm(X, k, T, epsilon=epsilon)
         assert probs_cx.shape == (k, n)
 
         # Maximization step
@@ -113,41 +127,66 @@ def em_algorithm(X, k, T, epsilon=0.001, means=None):
         llh = 1 / n * np.sum(np.log(probs_x))
         print(iterations + 1, "\t\t", llh)
 
-        # Stop condition
+        # Finish condition
         dist = np.sqrt(((means - old_means) ** 2).sum(axis=1))
         close = np.all(dist < epsilon)
         iterations += 1
+
+        # !----------- VISUALIZATION CODE -----------!
+        centroids = means
+        # probs_cx's (i,j) is Pr[C_i, x_j]
+        # assign each x_i to the cluster C_i that maximizes P(C_i | x_j)
+        clustering = np.argmax(probs_cx, axis=0)
+        assert clustering.shape == (n,), clustering.shape
+
+        # Draw clusters
+        ax.cla()
+        for j in range(k):
+            centroid = centroids[j]
+            c = colors[j]
+            ax.scatter(centroid[0], centroid[1], s=123, c=c, marker='^')
+            data = X[clustering == j]
+            x = data[:, 0]
+            y = data[:, 1]
+            ax.scatter(x, y, s=3, c=c)
+
+        # draw 3d gaussians.
+        # Create grid and multivariate normal
+        xs = np.linspace(4, 7, 50)
+        ys = np.linspace(2, 4.5, 50)
+        Xs, Ys = np.meshgrid(xs, ys)
+        pos = np.empty(Xs.shape + (2,))
+        pos[:, :, 0] = Xs;
+        pos[:, :, 1] = Ys
+        prob_space = sum([multivariate_normal(means[j], covs[j]).pdf(pos) for j in range(k)])
+
+        # Make a 3D plot
+        ax3d.cla()
+        ax3d1.cla()
+        ax3d2.cla()
+        ax3d3.cla()
+        ax3d.plot_surface(Xs, Ys, prob_space, cmap='viridis', linewidth=0)
+        ax3d1.plot_surface(Xs, Ys, multivariate_normal(means[0], covs[0]).pdf(pos), cmap='viridis', linewidth=0)
+        ax3d2.plot_surface(Xs, Ys, multivariate_normal(means[1], covs[1]).pdf(pos), cmap='viridis', linewidth=0)
+        ax3d3.plot_surface(Xs, Ys, multivariate_normal(means[2], covs[2]).pdf(pos), cmap='viridis', linewidth=0)
+
+        fig.canvas.draw()
 
     # Validate output
     assert means.shape == (k, d)
     assert covs.shape == (k, d, d)
     assert probs_c.shape == (k,)
+    return means, covs, probs_c
 
-    return means, covs, probs_c, llh
 
 # Load the Iris data set
 import sklearn.datasets
+
 iris = sklearn.datasets.load_iris()
-X = iris['data'][:,0:2] # reduce dimensions so we can plot what happens.
+X = iris['data'][:, 0:2]  # reduce dimensions so we can plot what happens.
 k = 3
 
-means, covs, priors, llh = em_algorithm(X, 3, 100, 0.001)
-
-fig, ax = plt.subplots(1, 1, figsize=(8,3))
-llhs = []
-
-for i in range(1):
-    _, _, _, llh = em_algorithm(X, 3, 100)
-    llhs.append(llh)
-    ax.plot(llhs, 'bx')
-    fig.canvas.draw()
+# the higher the detail the slower plotting
+detail = 20  # 50 looks very nice but your computer might not be able to handle it.
+means, covs, priors = em_algorithm_visualize(X, 3, 40, 0.001, detail=detail)
 plt.show()
-
-
-from sklearn.mixture import GaussianMixture as EM
-expectation_maximization = EM(n_components=3, init_params='random', covariance_type='diag', verbose=2, verbose_interval =1).fit(X)
-
-print(expectation_maximization.score(X))
-
-#def compute_em_cluster(means, covs, probs_c, data):
-
