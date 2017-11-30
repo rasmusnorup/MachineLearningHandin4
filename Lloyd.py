@@ -26,6 +26,7 @@ def lloyds_algorithm(X, k, T):
 
     # Initialize clusters random.
     clustering = np.random.randint(0, k, (n, ))
+    print(clustering)
     centroids  = np.zeros((k, d))
 
     # Used to stop if cost isn't improving (decreasing)
@@ -39,13 +40,19 @@ def lloyds_algorithm(X, k, T):
         # Update centroid
         # YOUR CODE HERE
         for j in range(k):
-            centroids[j] = 1/((clustering == j).sum) *np.sum( X[clustering == j], 0) 
+            clusterSum = (clustering == j).sum()
+            if clusterSum != 0:
+                centroids[j] = 1/(clusterSum) *np.sum( X[clustering == j], 0)
+            else: print("Devide by zero prevented. You can thank me later!")
         # END CODE
 
         # Update clustering
         # YOUR CODE HERE
         for j in range(n):
-            clustering[j] = np.argmin(np.square(np.linalg.norm(X[j]-centroids[q])) for q in range(k))
+            temp = []
+            for q in range(k):
+                temp.append(np.square(np.linalg.norm(X[j]-centroids[q])))
+            clustering[j] = np.argmin(temp)
         # END CODEp
 
         # Compute and print cost
@@ -60,4 +67,8 @@ def lloyds_algorithm(X, k, T):
 
     return clustering, centroids, cost
 
+#print(X.shape)
 clustering, centroids, cost = lloyds_algorithm(X, 3, 100)
+print(clustering)
+print(centroids)
+print(cost)
