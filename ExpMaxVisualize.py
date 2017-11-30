@@ -187,6 +187,6 @@ X = iris['data'][:, 0:2]  # reduce dimensions so we can plot what happens.
 k = 3
 
 # the higher the detail the slower plotting
-detail = 20  # 50 looks very nice but your computer might not be able to handle it.
+detail = 50  # 50 looks very nice but your computer might not be able to handle it.
 means, covs, priors = em_algorithm_visualize(X, 3, 40, 0.001, detail=detail)
 plt.show()

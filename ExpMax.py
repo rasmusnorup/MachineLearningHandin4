@@ -1,8 +1,16 @@
 import numpy as np
 from scipy.stats import multivariate_normal
 import matplotlib.pyplot as plt
+import Lloyd as lloyd
 
-
+def getBestLloyd(X, k , T, times):
+    bestCost = np.inf
+    for i in range(times):
+        clustering, centroids, cost = lloyd.lloyds_algorithm(X, k, T)
+        if cost < bestCost:
+            bestCentroids = centroids
+            bestCost = cost
+    return cost, bestCentroids
 
 def compute_probs_cx(points, means, covs, probs_c):
     '''
@@ -62,6 +70,9 @@ def em_algorithm(X, k, T, epsilon=0.001, means=None):
         llh:       The log-likelihood of the clustering (this is the objective we want to maximize)
     """
     n, d = X.shape
+
+    #Use Lloyd to find good starting centroids:
+    cost, means = getBestLloyd(X,k,10,10)
 
     # Initialize and validate mean
     if means is None:
