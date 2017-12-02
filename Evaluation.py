@@ -10,12 +10,24 @@ def silhouette(data, clustering):
 
     # YOUR CODE HERE
     silh = None
-
+    s = []
     for i in range(n):
         sameCluster = data[clustering == clustering[i]]
-        nj = len(clustering == clustering[i])
-        mu_in = sum([distance(data[i],sameCluster[j]) for j in range(nj)])/(nj-1) #we add the distance to itself, since it's zero anyways.
-        mu_out = np.min([sum([distance(data[i],data[clustering == c]) for]) for c in range(k)])
+        nj = len(sameCluster)
+        mu_in = np.sum([distance(data[i],sameCluster[j]) for j in range(nj)])/(nj-1) #we add the distance to itself, since it's zero anyways.
+
+        result = []
+        list = range(k)
+        for c in range(k):
+            if c != clustering[i]:
+                sameCluster = data[clustering == c]
+                nj = len(sameCluster)
+                result.append(np.sum([distance(data[i],sameCluster[j]) for j in range(nj)])/nj)
+
+        mu_out = np.min(result)
+        si = (mu_out - mu_in)/np.max([mu_in,mu_out])
+        s.append(si)
+    silh = (1/n) * np.sum(s)
     # END CODE
 
     return silh

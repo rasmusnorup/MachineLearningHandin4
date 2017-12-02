@@ -1,6 +1,7 @@
 import numpy as np
 
 import matplotlib.pyplot as plt
+import Evaluation as eval
 
 # Load the Iris data set
 import sklearn.datasets
@@ -72,3 +73,4 @@ clustering, centroids, cost = lloyds_algorithm(X, 3, 100)
 print(clustering)
 print(centroids)
 print(cost)
+print("Silhouette: " + str(eval.silhouette(X,clustering)))
