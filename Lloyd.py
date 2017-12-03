@@ -1,7 +1,7 @@
 import numpy as np
 
 import matplotlib.pyplot as plt
-import Evaluation as eval
+#import Evaluation as eval
 
 # Load the Iris data set
 import sklearn.datasets
@@ -69,8 +69,8 @@ def lloyds_algorithm(X, k, T):
     return clustering, centroids, cost
 
 #print(X.shape)
-clustering, centroids, cost = lloyds_algorithm(X, 3, 100)
-print(clustering)
-print(centroids)
-print(cost)
-print("Silhouette: " + str(eval.silhouette(X,clustering)))
+#clustering, centroids, cost = lloyds_algorithm(X, 3, 100)
+#print(clustering)
+#print(centroids)
+#print(cost)
+#print("Silhouette: " + str(eval.silhouette(X,clustering)))
