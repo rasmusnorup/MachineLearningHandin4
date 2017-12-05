@@ -3,6 +3,8 @@ from sklearn.mixture import GaussianMixture as EM
 import matplotlib.pyplot as plt
 
 from tensorflow.examples.tutorials.mnist import input_data
+from scipy.stats import multivariate_normal
+import numpy as np
 
 mnist = input_data.read_data_sets("data/")
 
@@ -26,8 +28,7 @@ for i in range(k):
 
 plt.show()
 
-from scipy.stats import multivariate_normal
-import numpy as np
+
 
 
 def sample(means, covs, num):
@@ -41,5 +42,5 @@ def sample(means, covs, num):
         ax[i].imshow(img.reshape(28, 28), cmap='gray')  # draw the random sample
     plt.show()
 
-
-sample(means, covs, 0)
+for i in range(10):
+    sample(means, covs, i)

@@ -102,6 +102,7 @@ def em_algorithm(X, k, T, epsilon=0.001, means=None):
 
         # Maximization step
         # YOUR CODE HERE
+
         newMeans = means
         newCovs = covs
         for i in range(k):
@@ -135,7 +136,7 @@ def em_algorithm(X, k, T, epsilon=0.001, means=None):
 
         # Compute per-sample average log likelihood (llh) of this iteration
         llh = 1 / n * np.sum(np.log(probs_x))
-        #print(iterations + 1, "\t\t", llh)
+        print(iterations + 1, "\t\t", llh)
 
         # Stop condition
         dist = np.sqrt(((means - old_means) ** 2).sum(axis=1))
