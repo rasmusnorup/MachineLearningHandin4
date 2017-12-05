@@ -74,11 +74,13 @@ for k in range(2, 10):
         em_sc = silhouette(X, clustering)
         total_em += em_sc
     print("Silhouette coefficient for EM with k=" +str(k)+" : " + str(total_em/10))
+    """
     for i in range(10):
         clustering, centroids, cost = lloyd.lloyds_algorithm(X, k, 50)
         lloyd_sc = silhouette(X, clustering)
         total_l += lloyd_sc
     print("Silhouette coefficient for Lloyd's with k=" + str(k) + " : " + str(total_l/10))
+    """
 
 """
 total = 0

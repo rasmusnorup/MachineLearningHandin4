@@ -111,7 +111,7 @@ def em_algorithm(X, k, T, epsilon=0.001, means=None):
             for j in range(n):
                 meanAbove = meanAbove + X[j]*probs_cx[i][j]
                 meanBelow = meanBelow + probs_cx[i][j]
-            newMeans[i] = np.divide(meanAbove,meanBelow)
+            newMeans[i] =  np.divide(meanAbove,meanBelow)
             for j in range(n):
                 covsAbove = covsAbove + probs_cx[i][j] * np.outer(X[j] - newMeans[i],X[j] - newMeans[i])
             newCovs[i] = np.divide(covsAbove,meanBelow)
