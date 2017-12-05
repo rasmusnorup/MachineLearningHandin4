@@ -64,7 +64,7 @@ def distance(x,y):
     dist = np.linalg.norm(x-y)
     return dist
 #clustering, centroids, cost = lloyd.lloyds_algorithm(X,3,10)
-means, covs, probs_c, llh = EM.em_algorithm(X, 3, 10, epsilon=0.001, means=None)
+means, covs, probs_c, llh = EM.em_algorithm(X, 3, 100, epsilon=0.0001, means=None)
 clustering = EM.compute_em_cluster(means, covs, probs_c, X)
 F_individual, F_overall, contingency = f1(clustering , y)
 #print(contingency)
