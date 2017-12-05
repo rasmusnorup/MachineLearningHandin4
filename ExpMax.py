@@ -72,7 +72,7 @@ def em_algorithm(X, k, T, epsilon=0.001, means=None):
     n, d = X.shape
 
     #Use Lloyd to find good starting centroids:
-    cost, means = getBestLloyd(X,k,30,30)
+    #cost, means = getBestLloyd(X,k,30,30)
 
     # Initialize and validate mean
     if means is None:

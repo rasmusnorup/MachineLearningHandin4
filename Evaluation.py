@@ -63,9 +63,32 @@ def f1(predicted, labels):
 def distance(x,y):
     dist = np.linalg.norm(x-y)
     return dist
-#clustering, centroids, cost = lloyd.lloyds_algorithm(X,3,10)
-means, covs, probs_c, llh = EM.em_algorithm(X, 3, 100, epsilon=0.0001, means=None)
-clustering = EM.compute_em_cluster(means, covs, probs_c, X)
-F_individual, F_overall, contingency = f1(clustering , y)
-#print(contingency)
-print("F1 Score: " + str(F_overall))
+
+
+for k in range(2, 10):
+    total_em = 0
+    total_l = 0
+    for i in range(10):
+        means, covs, probs_c, llh = EM.em_algorithm(X, k, 50)
+        clustering = EM.compute_em_cluster(means, covs, probs_c, X)
+        em_sc = silhouette(X, clustering)
+        total_em += em_sc
+    print("Silhouette coefficient for EM with k=" +str(k)+" : " + str(total_em/10))
+    for i in range(10):
+        clustering, centroids, cost = lloyd.lloyds_algorithm(X, k, 50)
+        lloyd_sc = silhouette(X, clustering)
+        total_l += lloyd_sc
+    print("Silhouette coefficient for Lloyd's with k=" + str(k) + " : " + str(total_l/10))
+
+"""
+total = 0
+for i in range(200):
+
+    means, covs, probs_c, llh = EM.em_algorithm(X, 3, 50, epsilon=0.0001, means=None)
+    clustering = EM.compute_em_cluster(means, covs, probs_c, X)
+    #clustering, centroids, cost = lloyd.lloyds_algorithm(X, 3, 50)
+    F_individual, F_overall, contingency = f1(clustering , y)
+    print("F1 Score: " + str(F_overall))
+    total += F_overall
+print("F1 average over 50 runs: " + str(total/200))
+"""
