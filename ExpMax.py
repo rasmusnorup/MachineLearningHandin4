@@ -175,8 +175,7 @@ expectation_maximization = EM(n_components=3, init_params='random', covariance_t
 
 def compute_em_cluster(means, covs, probs_c, data):
     probs_x, probs_cx = compute_probs_cx(data, means, covs, probs_c)
-    cluster = np.zeros(len(data))
-    cluster.astype(int)
+    cluster = np.zeros(len(data)).astype(int)
     for i in range(len(data)):
         cluster[i] = np.argmax([probs_x[j][i] for j in range(means.shape[0])])
     return cluster
