@@ -88,7 +88,7 @@ def em_algorithm(X, k, T, epsilon=0.001, means=None):
     probs_c = np.ones(k) / k
 
     # Column names
-    print("Iterations\tLLH")
+    #print("Iterations\tLLH")
 
     close = False
     old_means = np.zeros_like(means)
@@ -135,7 +135,7 @@ def em_algorithm(X, k, T, epsilon=0.001, means=None):
 
         # Compute per-sample average log likelihood (llh) of this iteration
         llh = 1 / n * np.sum(np.log(probs_x))
-        print(iterations + 1, "\t\t", llh)
+        #print(iterations + 1, "\t\t", llh)
 
         # Stop condition
         dist = np.sqrt(((means - old_means) ** 2).sum(axis=1))
@@ -165,13 +165,17 @@ for i in range(1):
     llhs.append(llh)
     ax.plot(llhs, 'bx')
     fig.canvas.draw()
-plt.show()
+#plt.show()
 
 
 from sklearn.mixture import GaussianMixture as EM
 expectation_maximization = EM(n_components=3, init_params='random', covariance_type='diag', verbose=2, verbose_interval =1).fit(X)
 
-print(expectation_maximization.score(X))
+#print(expectation_maximization.score(X))
 
-#def compute_em_cluster(means, covs, probs_c, data):
-
+def compute_em_cluster(means, covs, probs_c, data):
+    probs_x, probs_cx = compute_probs_cx(data, means, covs, probs_c)
+    cluster = np.zeros(len(data))
+    for i in range(len(data)):
+        cluster[i] = np.argmax([probs_x[j][i] for j in range(means.shape[0])])
+    return cluster

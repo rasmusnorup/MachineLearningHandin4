@@ -1,9 +1,10 @@
 import sklearn.datasets
 import numpy as np
+import ExpMax as EM
 import Lloyd as lloyd
 X, y = sklearn.datasets.load_iris(True)
 X = X[:,0:2] # reduce to 2d so you can plot if you want
-print(X.shape, y.shape)
+#print(X.shape, y.shape)
 
 def silhouette(data, clustering):
     n, d = data.shape
@@ -62,7 +63,9 @@ def f1(predicted, labels):
 def distance(x,y):
     dist = np.linalg.norm(x-y)
     return dist
-clustering, centroids, cost = lloyd.lloyds_algorithm(X,3,10)
+#clustering, centroids, cost = lloyd.lloyds_algorithm(X,3,10)
+means, covs, probs_c, llh = EM.em_algorithm(X, 3, 10, epsilon=0.001, means=None)
+clustering = EM.compute_em_cluster(means, covs, probs_c, X)
 F_individual, F_overall, contingency = f1(clustering , y)
-print(contingency)
+#print(contingency)
 print("F1 Score: " + str(F_overall))

@@ -27,7 +27,7 @@ def lloyds_algorithm(X, k, T):
 
     # Initialize clusters random.
     clustering = np.random.randint(0, k, (n, ))
-    print(clustering)
+    #print(clustering)
     centroids  = np.zeros((k, d))
 
     # Used to stop if cost isn't improving (decreasing)
@@ -35,7 +35,7 @@ def lloyds_algorithm(X, k, T):
     oldcost = 0
 
     # Column names
-    print("Iterations\tCost")
+    #print("Iterations\tCost")
 
     for i in range(T):
         # Update centroid
@@ -60,7 +60,7 @@ def lloyds_algorithm(X, k, T):
         cost = 0
         for j in range(n):
             cost += np.linalg.norm(X[j] - centroids[clustering[j]])**2
-        print(i+1, "\t\t", cost)
+        #print(i+1, "\t\t", cost)
 
         # Stop if cost didn't improve more than epislon (decrease)
         if np.isclose(cost, oldcost): break #TODO
