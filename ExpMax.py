@@ -118,6 +118,19 @@ def em_algorithm(X, k, T, epsilon=0.001, means=None):
             probs_c[i] = 1/n*np.sum(probs_cx[i])
         means = newMeans
         covs = newCovs
+
+        """
+        covs = np.zeros((k, d, d))
+        meanAbove = np.matmul(probs_cx, X)
+        meanBelow = np.sum(probs_cx,1)
+        means = np.transpose(np.divide(np.transpose(meanAbove),meanBelow))
+        probs_c = 1/n * meanBelow
+        for i in range(k):
+            Xminus = X-means[i]
+            for j in range(n):
+                covs[i] = covs[i] + probs_cx[i][j] * np.outer(Xminus[j],Xminus[j])
+            covs[i] = np.divide(covs[i],meanBelow[i])
+        """
         # END CODE
 
         # Compute per-sample average log likelihood (llh) of this iteration
