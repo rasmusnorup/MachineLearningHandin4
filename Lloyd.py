@@ -40,6 +40,7 @@ def lloyds_algorithm(X, k, T):
     for i in range(T):
         # Update centroid
         # YOUR CODE HERE
+        """
         for j in range(k):
             clusterSum = (clustering == j).sum()
             if clusterSum != 0:
@@ -54,13 +55,23 @@ def lloyds_algorithm(X, k, T):
             for q in range(k):
                 temp.append(np.square(np.linalg.norm(X[j]-centroids[q])))
             clustering[j] = np.argmin(temp)
+        """
+
+        for l in range(k):
+            cList = (clustering == l)
+            if cList.sum() > 0:
+                centroids[l] = 1 / (clustering[cList].size) * np.sum(X[cList], 0)
+
+        for j in range(n):
+            clustering[j] = np.argmin(np.sum(np.square(X[j] - centroids), 1))
+
         # END CODEp
 
         # Compute and print cost
         cost = 0
         for j in range(n):
             cost += np.linalg.norm(X[j] - centroids[clustering[j]])**2
-        #print(i+1, "\t\t", cost)
+        print(i+1, "\t\t", cost)
 
         # Stop if cost didn't improve more than epislon (decrease)
         if np.isclose(cost, oldcost): break #TODO

@@ -103,7 +103,7 @@ def em_algorithm(X, k, T, epsilon=0.001, means=None):
 
         # Maximization step
         # YOUR CODE HERE
-
+        """
         newMeans = means
         newCovs = covs
         for i in range(k):
@@ -132,7 +132,7 @@ def em_algorithm(X, k, T, epsilon=0.001, means=None):
             for j in range(n):
                 covs[i] = covs[i] + probs_cx[i][j] * np.outer(Xminus[j],Xminus[j])
             covs[i] = np.divide(covs[i],meanBelow[i])
-        """
+
         # END CODE
 
         # Compute per-sample average log likelihood (llh) of this iteration

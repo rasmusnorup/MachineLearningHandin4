@@ -118,21 +118,17 @@ def compress_EM(im, k, T, name):
     print("Compression Ratio: \t", round(original_size/compressed_size, 5))
     return original_size/compressed_size
 
-def compress_facade(k=3, T=1, best = np.asarray([0,0,0])):
+def compress_facade(k=3, T=1, best = np.asarray([0,0])):
     img_facade = download_image('https://www.sixt.ca/fileadmin/files/global/user_upload/pictures-city-page/nice-ville.jpg')
     ratio_mix = compress_Mix(img_facade, k, T, 'nice-ville.jpg')
-    ratio_em = 1 #compress_EM(img_facade, k, T, 'nice-ville.jpg')
-    ratio_kmeans = compress_kmeans(img_facade, k, T, 'nice-ville.jpg')
-    c = [ratio_mix,ratio_em,ratio_kmeans]
     print("ratios")
-    print(c)
-    if np.max(c) > best[2]:
-        best = [k,np.argmax(c),np.max(c)]
+    if ratio_mix[1] > best[1]:
+        best = [k,ratio_mix[1]]
     return best
 
-h = np.asarray([0,0,0])
+h = np.asarray([0,0])
 for i in range(3,11):
-    h = compress_facade(i,30,h)
+    h = compress_facade(i,10,h)
     print(h)
 print("Finalle h")
 print(h)
