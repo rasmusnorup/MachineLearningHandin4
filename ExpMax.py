@@ -152,21 +152,23 @@ def em_algorithm(X, k, T, epsilon=0.001, means=None):
 
 # Load the Iris data set
 import sklearn.datasets
-iris = sklearn.datasets.load_iris()
-X = iris['data'][:,0:2] # reduce dimensions so we can plot what happens.
-k = 3
 
-means, covs, priors, llh = em_algorithm(X, 3, 100, 0.001)
 
-fig, ax = plt.subplots(1, 1, figsize=(8,3))
-llhs = []
+def plotIt():
+    iris = sklearn.datasets.load_iris()
+    X = iris['data'][:, 0:2]  # reduce dimensions so we can plot what happens.
+    k = 3
+    means, covs, priors, llh = em_algorithm(X, 3, 100, 0.001)
 
-for i in range(1):
-    _, _, _, llh = em_algorithm(X, 3, 100)
-    llhs.append(llh)
-    ax.plot(llhs, 'bx')
-    fig.canvas.draw()
-#plt.show()
+    fig, ax = plt.subplots(1, 1, figsize=(8,3))
+    llhs = []
+
+    for i in range(1):
+        _, _, _, llh = em_algorithm(X, 3, 100)
+        llhs.append(llh)
+        ax.plot(llhs, 'bx')
+        fig.canvas.draw()
+    #plt.show()
 
 
 from sklearn.mixture import GaussianMixture as EM
