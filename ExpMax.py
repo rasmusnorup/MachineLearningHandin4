@@ -2,6 +2,7 @@ import numpy as np
 from scipy.stats import multivariate_normal
 import matplotlib.pyplot as plt
 import Lloyd as lloyd
+from sklearn.mixture import GaussianMixture as EM
 
 def getBestLloyd(X, k , T, times):
     bestCost = np.inf
@@ -171,8 +172,8 @@ def plotIt():
     #plt.show()
 
 
-from sklearn.mixture import GaussianMixture as EM
-expectation_maximization = EM(n_components=3, init_params='random', covariance_type='diag', verbose=2, verbose_interval =1).fit(X)
+
+    expectation_maximization = EM(n_components=3, init_params='random', covariance_type='diag', verbose=2, verbose_interval =1).fit(X)
 
 #print(expectation_maximization.score(X))
 

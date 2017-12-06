@@ -19,9 +19,9 @@ def download_image(url):
         with open(filename, 'w+b') as fp, urllib.request.urlopen(url) as r:
             fp.write(r.read())
             return scipy.misc.imread(fp) / 255
-
-img_facade = download_image('https://uploads.toptal.io/blog/image/443/toptal-blog-image-1407508081138.png')
 """
+img_facade = download_image('https://uploads.toptal.io/blog/image/443/toptal-blog-image-1407508081138.png')
+
 fig, ax = plt.subplots(1, 1, figsize=(5,5))
 ax.imshow(img_facade)
 plt.show()
