@@ -4,6 +4,7 @@ import scipy.misc
 import matplotlib.pyplot as plt
 import ExpMax
 import Lloyd
+from PIL import Image
 
 
 
@@ -34,7 +35,7 @@ print("You should compress your image as much as possible! ")
 def compress_Mix(im, k, T, name):
     height, width, depth = im.shape
     data = im.reshape((height * width, depth))
-    clustering, centroids, score = Lloyd.lloyds_algorithm(data, k, T)
+    clustering, centroids, score = Lloyd.lloyds_algorithm(data, k, 10)
     centroids, covs, probs_c, llh = ExpMax.em_algorithm(data, k, T, epsilon = 0.001, means=centroids)
     clustering = ExpMax.compute_em_cluster(centroids, covs, probs_c, data)
 
@@ -99,7 +100,7 @@ def compress_EM(im, k, T, name):
     data_compressed = data
 
     for i in range(k): data_compressed[clustering == i] = centroids[i]
-
+    data_compressed = data_compressed*255
     im_compressed = data_compressed.reshape((height, width, depth))
 
     # The following code should not be changed.
@@ -119,16 +120,22 @@ def compress_EM(im, k, T, name):
     return original_size/compressed_size
 
 def compress_facade(k=3, T=1, best = np.asarray([0,0])):
-    img_facade = download_image('https://www.sixt.ca/fileadmin/files/global/user_upload/pictures-city-page/nice-ville.jpg')
-    ratio_mix = compress_Mix(img_facade, k, T, 'nice-ville.jpg')
+    #img_facade = download_image('https://www.sixt.ca/fileadmin/files/global/user_upload/pictures-city-page/nice-ville.jpg')
+    img_facade = scipy.misc.imread('Hotels.jpg') / 255
+    ratio_mix = compress_Mix(img_facade, k, T, 'Hotels.jpg')
     print("ratios")
-    if ratio_mix[1] > best[1]:
-        best = [k,ratio_mix[1]]
+    if ratio_mix > best[1]:
+        best = [k,ratio_mix]
     return best
-
+"""
 h = np.asarray([0,0])
 for i in range(3,11):
-    h = compress_facade(i,10,h)
+    h = compress_facade(i,30,h)
     print(h)
 print("Finalle h")
 print(h)
+"""
+compress_facade(3,100,[0,0])
+os.rename('compressed.jpg', 'compressed_k3.jpg')
+compress_facade(12,100,[0,0])
+os.rename('compressed.jpg', 'compressed_k12.jpg')
